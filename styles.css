@@ -1,0 +1,949 @@
+/* 全局样式 */
+:root {
+    --primary-red: #c41e3a;
+    --primary-gold: #ffd700;
+    --dark-red: #8b0000;
+    --light-red: #ffebee;
+    --black: #1a1a1a;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", "思源黑体", sans-serif;
+    background: linear-gradient(135deg, var(--light-red), var(--primary-red));
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* 添加祥云背景装饰 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Cpath d='M30,40 C40,30 50,35 60,40 C70,45 80,40 90,35 C100,30 110,35 120,40 C130,45 140,40 150,35' stroke='%23ffd700' stroke-width='5' fill='none' filter='blur(2px)' opacity='0.4'/%3E%3Cpath d='M20,60 C30,50 40,55 50,60 C60,65 70,60 80,55 C90,50 100,55 110,60 C120,65 130,60 140,55' stroke='%23ffd700' stroke-width='5' fill='none' filter='blur(2px)' opacity='0.4'/%3E%3C/svg%3E");
+    background-size: 300px;
+    background-repeat: repeat;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* 添加蛇形装饰 */
+body::after {
+    content: '';
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    height: 600px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200'%3E%3Cpath d='M50,10 Q70,30 30,70 T50,130 T30,190' stroke='%23ffd700' stroke-width='8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='10' r='5' fill='%23ffd700'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* 导航栏样式 */
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: linear-gradient(to right, var(--dark-red), var(--primary-red));
+    border-bottom: 2px solid var(--primary-gold);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 添加导航栏装饰 */
+.nav-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Cpath d='M10,25 Q25,10 40,25 T70,25 T100,25' stroke='%23ffd700' stroke-width='3' fill='none'/%3E%3Cpath d='M10,35 Q25,20 40,35 T70,35 T100,35' stroke='%23ffd700' stroke-width='2' fill='none' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 200px 50px;
+    background-repeat: repeat-x;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.nav-bar h1 {
+    color: var(--primary-gold);
+    font-family: "华文行楷", "隶书", serif;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.nav-right {
+    display: flex;
+    gap: 1rem;
+}
+
+/* 导航按钮基础样式 */
+.nav-button {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--primary-gold);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--primary-gold);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+.nav-button:hover {
+    background: var(--primary-gold);
+    color: var(--dark-red);
+}
+
+/* 禁用状态样式 */
+.nav-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #999;
+    color: #999;
+}
+
+.nav-button.disabled:hover {
+    background: transparent;
+    color: #999;
+    transform: none;
+}
+
+/* 主容器样式 */
+.main-container {
+    display: flex;
+    padding: 2rem;
+    height: calc(100vh - 80px);
+    gap: 2rem;
+    justify-content: space-between;
+}
+
+/* 左侧和右侧列表通用样式 */
+.prize-list-container, .winner-list-container {
+    position: relative;
+    width: 60px;
+    min-height: 100%;
+    background: var(--white);
+    border-radius: 8px;
+    border: 2px solid var(--primary-red);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.prize-list-container.expanded {
+    width: 20%;
+}
+
+.winner-list-container.expanded {
+    width: 20%;
+}
+
+/* 添加列表容器装饰 */
+.prize-list-container::before, .winner-list-container::before {
+    content: none;
+}
+
+/* 展开/收起按钮样式 */
+.toggle-btn {
+    width: 16px;
+    height: 40px;
+    border: none;
+    border-radius: 16px 0 0 16px;
+    background: var(--primary-red);
+    color: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 0;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+}
+
+.toggle-btn:hover {
+    background: var(--dark-red);
+    color: var(--white);
+    width: 20px;
+}
+
+/* 修改抽奖区域的核心布局样式 */
+.lottery-area {
+    flex: 1;
+    width: 100%;
+    max-width: 800px; /* 设置最大宽度 */
+    min-width: 320px; /* 设置最小宽度 */
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 100vh; /* 使用视口高度 */
+    box-sizing: border-box;
+}
+
+/* 选中奖品显示区域 - 初始状态 */
+.selected-prize {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.5s ease;
+    position: absolute;
+    left: 50%;
+    top: calc(50% + 50px); /* 向下偏移以避免被按钮遮挡 */
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* 抽奖开始后的状态 */
+.selected-prize.lottery-started {
+    position: fixed;
+    left: calc(60px + 40px);
+    top: 170px; /* 调整位置，确保在按钮下方 */
+    transform: none;
+    max-width: 300px;
+    padding: 1rem;
+    margin: 0;
+    background: rgba(135, 206, 235, 0.2);
+    border: 2px solid rgba(135, 206, 235, 0.5);
+}
+
+/* 当奖品列表展开时调整位置 */
+.prize-list-container.expanded + .lottery-area .selected-prize.lottery-started {
+    left: calc(20% + 40px); /* 调整为与新的宽度匹配 */
+}
+
+/* 选中奖品图片样式 */
+.selected-prize img {
+    max-width: 200px;
+    max-height: 200px;
+    width: auto;
+    height: auto;
+    margin: 0 auto 1rem;
+    display: block;
+    object-fit: contain;
+    transition: all 0.5s ease;
+}
+
+/* 抽奖开始后的图片样式 */
+.selected-prize.lottery-started img {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+/* 选中奖品文字信息样式 */
+.selected-prize-info {
+    transition: all 0.5s ease;
+}
+
+/* 抽奖开始后的文字样式 */
+.selected-prize.lottery-started .selected-prize-info {
+    font-size: 0.9rem;
+}
+
+/* 抽奖开始后的奖品数量样式 */
+.selected-prize.lottery-started .prize-count {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* 抽奖按钮容器 */
+.lottery-button-container {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+}
+
+/* 抽奖按钮 */
+.lottery-button {
+    width: 200px;
+    height: 60px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    pointer-events: auto;
+}
+
+.lottery-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+}
+
+.lottery-button:active {
+    transform: translateY(1px);
+}
+
+/* 添加中国结装饰 */
+.lottery-button::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 L90,50 L50,90 L10,50 Z' fill='%23c41e3a'/%3E%3Cpath d='M30,30 L70,70 M30,70 L70,30' stroke='%23ffd700' stroke-width='5'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%23ffd700'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 2;
+    opacity: 0.9;
+}
+
+/* 标题样式 */
+.section-header h2 {
+    color: var(--dark-red);
+    font-family: "华文行楷", "隶书", serif;
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* 展开/收起按钮容器 */
+.toggle-btn-container {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+/* 左侧列表的按钮容器 */
+.prize-list-container .toggle-btn-container {
+    right: -1px;
+}
+
+/* 右侧列表的按钮容器 */
+.winner-list-container .toggle-btn-container {
+    left: -1px;
+}
+
+/* 展开状态下的按钮容器位置保持不变 */
+.expanded .toggle-btn-container {
+    position: absolute;
+}
+
+/* 标题容器样式 */
+.section-header {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    z-index: 2;
+}
+
+.expanded .section-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    transform: none;
+    writing-mode: horizontal-tb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    background: var(--white);
+    z-index: 3;
+}
+
+/* 列表内容样式 */
+.prize-list, .winner-list {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    padding: 1rem;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-red) var(--light-red);
+}
+
+.expanded .prize-list,
+.expanded .winner-list {
+    opacity: 1;
+    max-height: calc(100vh - 200px);
+}
+
+/* 图标样式 */
+.toggle-btn i {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+    margin-left: -1px;
+}
+
+/* 左侧列表的展开/收起图标旋转 */
+.prize-list-container .toggle-btn i {
+    transform: rotate(0);
+}
+
+.prize-list-container.expanded .toggle-btn i {
+    transform: rotate(180deg);
+}
+
+/* 右侧列表的展开/收起图标旋转 */
+.winner-list-container .toggle-btn i {
+    transform: rotate(0);
+}
+
+.winner-list-container.expanded .toggle-btn i {
+    transform: rotate(180deg);
+}
+
+/* 右侧列表的按钮样式特殊处理 */
+.winner-list-container .toggle-btn {
+    border-radius: 0 16px 16px 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+}
+
+/* 奖品列表项样式 */
+.prize-item {
+    display: flex;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--white);
+}
+
+.prize-item:hover {
+    background: var(--light-red);
+}
+
+.prize-item.selected {
+    background: var(--light-red);
+    border-left: 4px solid var(--primary-red);
+}
+
+.prize-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 1rem;
+}
+
+.prize-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--black);
+}
+
+.prize-info p {
+    margin: 0.25rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* 抽奖按钮运行状态 */
+.lottery-button.running {
+    animation: none;
+    background: var(--dark-red);
+}
+
+/* 抽奖结果区域基础样式 */
+.lottery-result {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(90%, 800px);
+    min-width: 320px;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    text-align: center;
+    z-index: 98;
+    display: none;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+/* 滚动效果时的样式 */
+.lottery-result.scrolling {
+    display: block;
+    top: 45%;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.98);
+    border: 3px solid var(--primary-gold);
+    animation: floatAnimation 3s infinite ease-in-out;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+/* 滚动用户样式 */
+.rolling-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1.5rem;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95), rgba(255, 215, 0, 0.1));
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transform-origin: center;
+    animation: pulseScale 1.5s infinite ease-in-out;
+    transform: translateZ(20px);
+}
+
+.rolling-user img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-gold);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    animation: rollImageEffect 1s infinite ease-in-out;
+}
+
+.rolling-user span {
+    font-size: 2rem;
+    color: var(--dark-red);
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    animation: rollTextEffect 1s infinite ease-in-out;
+}
+
+/* 中奖结果样式 */
+.lottery-result.winner {
+    display: block;
+    padding: 3rem;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.98), rgba(255, 215, 0, 0.15));
+    border: none;
+    animation: winnerAppear 1s ease-out forwards;
+    box-shadow: 0 0 100px rgba(255, 215, 0, 0.4);
+}
+
+/* 中奖者信息容器 */
+.winner-announcement {
+    position: relative;
+    z-index: 2;
+    transform-origin: center;
+    animation: announceWinner 1.2s ease-out forwards;
+}
+
+/* 中奖者图片容器 */
+.winner-info {
+    position: relative;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 中奖者图片样式 */
+.winner-info img {
+    width: min(200px, 30vw);
+    height: min(200px, 30vw);
+    border-radius: 50%;
+    border: 6px solid var(--primary-gold);
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.6);
+    animation: winnerImageEffect 3s infinite ease-in-out;
+    transform-origin: center;
+    object-fit: cover;
+}
+
+/* 中奖者名字样式 */
+.winner-info h3 {
+    margin: 1rem 0;
+    font-size: 2rem;
+    background: linear-gradient(45deg, var(--primary-red), var(--primary-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    animation: textPulse 2s infinite ease-in-out;
+}
+
+/* 中奖奖品名称样式 */
+.winner-info p {
+    font-size: 1.3rem;
+    color: var(--primary-red);
+    margin: 0.5rem 0;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    animation: textFloat 2s infinite ease-in-out;
+}
+
+/* 光柱效果 */
+.winner-info::before {
+    content: '';
+    position: absolute;
+    top: -200%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 200%;
+    background: linear-gradient(to bottom, transparent, var(--primary-gold));
+    filter: blur(2px);
+    animation: lightBeamEffect 1.5s ease-out forwards;
+    z-index: -1;
+}
+
+/* 星光背景效果 */
+.winner-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(255, 215, 0, 0.1) 100%);
+    animation: starBackground 2s infinite ease-in-out;
+    z-index: 1;
+}
+
+/* 获奖列表项样式 */
+.winner-item {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.winner-item .winner-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.winner-item .winner-info h4 {
+    margin: 0;
+    padding: 0.5rem;
+    color: var(--black);
+    font-size: 1.2rem;
+    animation: shakeText 2s infinite ease-in-out;
+}
+
+.delete-winner-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: var(--light-red);
+    color: var(--primary-red);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    opacity: 0;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.winner-item:hover .delete-winner-btn {
+    opacity: 1;
+}
+
+.delete-winner-btn:hover {
+    background: var(--primary-red);
+    color: var(--white);
+}
+
+/* 奖品分组样式 */
+.prize-group {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--light-red);
+    border-radius: 8px;
+}
+
+.prize-group h3 {
+    margin-bottom: 0.8rem;
+    color: var(--primary-red);
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+/* 没有数据时的提示样式 */
+.no-data {
+    padding: 2rem;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+}
+
+/* 动画关键帧 */
+@keyframes pulseScale {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes rollImageEffect {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    }
+}
+
+@keyframes rollTextEffect {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes floatAnimation {
+    0%, 100% {
+        transform: translate(-50%, -45%);
+    }
+    50% {
+        transform: translate(-50%, -55%);
+    }
+}
+
+@keyframes winnerAppear {
+    0% {
+        transform: translate(-50%, -30%) scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes announceWinner {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes winnerImageEffect {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+    }
+}
+
+@keyframes textPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes textFloat {
+    0%, 100% {
+        transform: translateY(0);
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+        transform: translateY(-5px);
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+}
+
+@keyframes lightBeamEffect {
+    0% {
+        height: 0;
+        opacity: 0;
+        width: 2px;
+        filter: blur(2px);
+    }
+    50% {
+        opacity: 1;
+        width: 100px;
+        filter: blur(5px);
+    }
+    100% {
+        height: 300%;
+        opacity: 0.7;
+        width: 200px;
+        filter: blur(8px);
+    }
+}
+
+@keyframes starBackground {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 1200px) {
+    .lottery-result {
+        width: 70%;
+    }
+    
+    .rolling-user img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .rolling-user span {
+        font-size: 1.8rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .lottery-result {
+        width: 85%;
+        padding: 1.5rem;
+    }
+    
+    .rolling-user {
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+    
+    .rolling-user img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .rolling-user span {
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .lottery-result {
+        width: 95%;
+        padding: 1rem;
+    }
+    
+    .rolling-user {
+        padding: 0.8rem;
+        gap: 1rem;
+    }
+    
+    .rolling-user img {
+        width: 60px;
+        height: 60px;
+        border-width: 3px;
+    }
+    
+    .rolling-user span {
+        font-size: 1.2rem;
+    }
+}
+
+/* 确保抽奖结果不会被其他元素遮挡 */
+.prize-list-container,
+.winner-list-container {
+    z-index: 97;
+}
+
+.lottery-button-container {
+    z-index: 99;
+}
+
+/* 动态调整抽奖区域位置 */
+@media screen and (min-height: 800px) {
+    .lottery-result.scrolling {
+        top: 40%;
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .lottery-result.scrolling {
+        top: 50%;
+    }
+    
+    .lottery-result {
+        padding: 1rem;
+    }
+    
+    .rolling-user {
+        padding: 0.8rem;
+    }
+}
+
+/* 优化动画性能 */
+.lottery-result,
+.rolling-user,
+.winner-info {
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* 添加抖动动画关键帧 */
+@keyframes shakeText {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-2px);
+    }
+    75% {
+        transform: translateX(2px);
+    }
+} 
