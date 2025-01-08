@@ -323,8 +323,19 @@ function resetSelectedPrize() {
 
 // 更新奖品列表显示
 function updatePrizeList() {
-    // 从localStorage获取最新的奖品数据
-    prizes = JSON.parse(localStorage.getItem('prizes')) || [];
+    const prizes = JSON.parse(localStorage.getItem('prizes')) || [];
+    
+    if (prizes.length === 0) {
+        prizeList.innerHTML = `
+            <div class="no-data">
+                暂无奖品数据
+                <br><br>
+                <button class="nav-button" onclick="window.location.href='admin.html'">
+                    <i class="fas fa-plus"></i> 点击进入后台添加
+                </button>
+            </div>`;
+        return;
+    }
     
     // 更新奖品列表显示
     prizeList.innerHTML = prizes.map(prize => `
@@ -338,11 +349,6 @@ function updatePrizeList() {
             </div>
         </div>
     `).join('');
-
-    // 如果没有奖品，显示提示信息
-    if (prizes.length === 0) {
-        prizeList.innerHTML = '<div class="no-data">暂无可用奖品</div>';
-    }
 }
 
 // 更新获奖列表显示
