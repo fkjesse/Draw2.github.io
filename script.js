@@ -469,19 +469,7 @@ function handleAdminClick(e) {
     console.log('Admin button clicked'); // 调试日志
     if (e) e.preventDefault(); // 如果是事件对象，阻止默认行为
     
-    // 从localStorage获取最新数据
-    const currentPrizes = JSON.parse(localStorage.getItem('prizes')) || [];
-    const currentUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const hasData = currentPrizes.length > 0 || currentUsers.length > 0;
-    
-    console.log('Has data:', hasData); // 调试日志
-    
-    if (!hasData) {
-        alert('暂无数据，无需进入后台管理');
-        return;
-    }
-    
-    // 有数据则跳转
+    // 直接跳转到后台页面
     console.log('Redirecting to admin page...'); // 调试日志
     try {
         window.location.href = 'admin.html';
