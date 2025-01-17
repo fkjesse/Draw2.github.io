@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽奖系统后台管理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="admin-nav">
+        <div class="nav-left">
+            <h1>抽奖系统后台管理</h1>
+        </div>
+        <div class="nav-right">
+            <button class="nav-button" onclick="window.location.href='index.html'">
+                <i class="fas fa-home"></i> 返回前台
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <div class="admin-container">
+        <!-- 左侧菜单 -->
+        <div class="admin-sidebar">
+            <div class="menu-item active" data-tab="user">
+                <i class="fas fa-users"></i> 用户管理
+            </div>
+            <div class="menu-item" data-tab="prize">
+                <i class="fas fa-gift"></i> 奖品管理
+            </div>
+            <div class="menu-item" data-tab="record">
+                <i class="fas fa-history"></i> 抽奖记录
+            </div>
+            <div class="menu-item" data-tab="system">
+                <i class="fas fa-cog"></i> 系统设置
+            </div>
+        </div>
+
+        <!-- 右侧内容区 -->
+        <div class="admin-content">
+            <!-- 用户管理面板 -->
+            <div class="content-panel active" id="userPanel">
+                <div class="panel-header">
+                    <h2>用户管理</h2>
+                    <div class="panel-tools">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="搜索用户..." class="search-input">
+                        </div>
+                        <button class="tool-button primary" onclick="showAddUserModal()">
+                            <i class="fas fa-user-plus"></i> 添加用户
+                        </button>
+                        <label class="tool-button">
+                            <i class="fas fa-upload"></i> 批量导入
+                            <input type="file" id="batchUserUpload" multiple accept="image/*" style="display: none;">
+                        </label>
+                        <button class="tool-button" onclick="exportUsers()">
+                            <i class="fas fa-download"></i> 导出
+                        </button>
+                    </div>
+                </div>
+                <div class="table-info">
+                    总用户数：<span id="totalUsers">0</span> | 
+                    当前显示：<span id="currentPageInfo">1-10</span>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="name">用户名 <i class="fas fa-sort"></i></th>
+                                <th>参与图片</th>
+                                <th class="sortable" data-sort="registerTime">注册时间 <i class="fas fa-sort"></i></th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- 用户数据将通过JavaScript动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <div class="page-size">
+                        每页显示：
+                        <select id="pageSizeSelect" onchange="changePageSize()">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="pagination" id="userPagination">
+                        <!-- 分页控件将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 奖品管理面板 -->
+            <div class="content-panel" id="prizePanel">
+                <div class="panel-header">
+                    <h2>奖品管理</h2>
+                    <div class="panel-tools">
+                        <button class="tool-button primary" onclick="showAddPrizeModal()">
+                            <i class="fas fa-plus"></i> 添加奖品
+                        </button>
+                    </div>
+                </div>
+                <div class="prize-grid" id="prizeGrid">
+                    <!-- 奖品卡片将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- 抽奖记录面板 -->
+            <div class="content-panel" id="recordPanel">
+                <div class="panel-header">
+                    <h2>抽奖记录</h2>
+                    <div class="panel-tools">
+                        <input type="date" class="date-input">
+                        <input type="text" placeholder="搜索..." class="search-input">
+                        <button class="tool-button" onclick="exportRecords()">
+                            <i class="fas fa-download"></i> 导出
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>用户名</th>
+                                <th>奖品</th>
+                                <th>抽奖时间</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordTableBody">
+                            <!-- 记录数据将通过JavaScript动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <!-- 分页控件将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- 系统设置面板 -->
+            <div class="content-panel" id="systemPanel">
+                <div class="panel-header">
+                    <h2>系统设置</h2>
+                </div>
+                <div class="settings-container">
+                    <div class="setting-group">
+                        <h3>背景图片设置</h3>
+                        <div class="background-preview">
+                            <img id="currentBackground" src="" alt="当前背景">
+                        </div>
+                        <div class="setting-controls">
+                            <label class="tool-button file-upload">
+                                <i class="fas fa-upload"></i> 更换背景
+                                <input type="file" id="backgroundUpload" accept="image/*">
+                            </label>
+                            <button class="tool-button" id="resetBackground">
+                                <i class="fas fa-undo"></i> 恢复默认
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加/编辑奖品的模态框 -->
+    <div class="modal" id="prizeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加奖品</h3>
+                <button class="close-button" onclick="closePrizeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="prizeForm">
+                    <div class="form-group">
+                        <label>奖品名称</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>奖品描述</label>
+                        <textarea name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>奖品数量</label>
+                        <input type="number" name="count" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>奖品图片</label>
+                        <input type="file" name="image" accept="image/*">
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="cancel-button" onclick="closePrizeModal()">取消</button>
+                        <button type="submit" class="submit-button">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加用户模态框 -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加用户</h3>
+                <button class="close-button" onclick="closeUserModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>参与图片</label>
+                        <input type="file" name="image" accept="image/*">
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="cancel-button" onclick="closeUserModal()">取消</button>
+                        <button type="submit" class="submit-button">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑用户模态框 -->
+    <div class="modal" id="editUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑用户</h3>
+                <button class="close-button" onclick="closeEditUserModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" name="userId">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>当前图片</label>
+                        <div class="current-user-image">
+                            <img id="currentUserImage" src="" alt="当前用户图片">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>更换图片（可选）</label>
+                        <input type="file" name="newImage" accept="image/*">
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="cancel-button" onclick="closeEditUserModal()">取消</button>
+                        <button type="submit" class="submit-button">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html> 
